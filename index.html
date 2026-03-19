@@ -43,9 +43,11 @@
         <h1>✅ Supabase Todo Demo</h1>
         <div class="card auth-box active" id="auth-box">
             <div class="badge">🔐 身份认证</div>
-            <input type="email" id="email" placeholder="邮箱地址">
-            <input type="password" id="password" placeholder="密码">
-            <button type="button" id="btn-signup">📝 注册</button>
+            <form id="auth-form">
+                <input type="email" id="email" placeholder="邮箱地址" required>
+                <input type="password" id="password" placeholder="密码" required>
+                <button type="submit" id="btn-signup">📝 注册</button>
+            </form>
             <button type="button" id="btn-signin">🔑 登录</button>
             <button type="button" id="btn-signout">🚪 退出登录</button>
         </div>
@@ -63,13 +65,13 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://crwshvxsbyeciculvysf.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyd3NodnhzYnllY2ljdWx2eXNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4ODg1OTEsImV4cCI6MjA4OTQ2NDU5MX0.lrGhzopZrjOZ08_CuXVYUaxrOloWR4FXkW_fYolrz7w';
+        var _supabaseUrl = 'https://crwshvxsbyeciculvysf.supabase.co';
+        var _supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyd3NodnhzYnllY2ljdWx2eXNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4ODg1OTEsImV4cCI6MjA4OTQ2NDU5MX0.lrGhzopZrjOZ08_CuXVYUaxrOloWR4FXkW_fYolrz7w';
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        var client = window.supabase.createClient(_supabaseUrl, _supabaseKey);
 
         // 监听登录状态
-        supabase.auth.onAuthStateChange(function(event, session) {
+        client.auth.onAuthStateChange(function(event, session) {
             if (session) {
                 showTodoBox(session.user);
                 loadTodos();
@@ -90,10 +92,11 @@
         }
 
         // 注册
-        document.getElementById('btn-signup').onclick = async function() {
+        document.getElementById('auth-form').onsubmit = async function(e) {
+            e.preventDefault();
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
-            var result = await supabase.auth.signUp({ email: email, password: password });
+            var result = await client.auth.signUp({ email: email, password: password });
             if (result.error) {
                 alert('注册失败: ' + result.error.message);
             } else {
@@ -105,23 +108,24 @@
         document.getElementById('btn-signin').onclick = async function() {
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
-            var result = await supabase.auth.signInWithPassword({ email: email, password: password });
+            var result = await client.auth.signInWithPassword({ email: email, password: password });
             if (result.error) {
                 alert('登录失败: ' + result.error.message);
             }
         };
 
         // 退出
-        document.getElementById('btn-signout').onclick = async function() {
-            await supabase.auth.signOut();
+        var doSignOut = async function() {
+            await client.auth.signOut();
             showAuthBox();
         };
 
-        document.getElementById('btn-exit').onclick = document.getElementById('btn-signout').onclick;
+        document.getElementById('btn-signout').onclick = doSignOut;
+        document.getElementById('btn-exit').onclick = doSignOut;
 
         // 加载 Todo
         async function loadTodos() {
-            var result = await supabase.from('todos').select('*').order('created_at', { ascending: false });
+            var result = await client.from('todos').select('*').order('created_at', { ascending: false });
             if (result.error) {
                 console.error('加载失败:', result.error);
                 return;
@@ -150,7 +154,7 @@
             var input = document.getElementById('todo-input');
             var title = input.value.trim();
             if (!title) return;
-            var result = await supabase.from('todos').insert([{ title: title, is_completed: false }]);
+            var result = await client.from('todos').insert([{ title: title, is_completed: false }]);
             if (result.error) {
                 alert('添加失败: ' + result.error.message);
                 return;
@@ -161,13 +165,13 @@
 
         // 切换完成状态
         async function toggleTodo(id, isCompleted) {
-            await supabase.from('todos').update({ is_completed: isCompleted }).eq('id', id);
+            await client.from('todos').update({ is_completed: isCompleted }).eq('id', id);
             loadTodos();
         }
 
         // 删除 Todo
         async function deleteTodo(id) {
-            await supabase.from('todos').delete().eq('id', id);
+            await client.from('todos').delete().eq('id', id);
             loadTodos();
         }
 
