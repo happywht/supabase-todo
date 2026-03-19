@@ -6,202 +6,70 @@
     <title>Supabase Todo Demo</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: #fff;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #3ecf8e;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-        .auth-box {
-            display: none;
-        }
-        .auth-box.active {
-            display: block;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            font-size: 16px;
-        }
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 10px;
-        }
-        .btn-primary {
-            background: #3ecf8e;
-            color: #1a1a2e;
-            font-weight: bold;
-        }
-        .btn-primary:hover {
-            background: #2ecc71;
-            transform: translateY(-2px);
-        }
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-        }
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .btn-danger {
-            background: #e74c3c;
-            color: #fff;
-            width: auto;
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-        .todo-box {
-            display: none;
-        }
-        .todo-box.active {
-            display: block;
-        }
-        .todo-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .todo-input input {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        .todo-input button {
-            width: auto;
-            padding: 12px 25px;
-        }
-        .todo-list {
-            list-style: none;
-        }
-        .todo-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            transition: all 0.3s;
-        }
-        .todo-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .todo-item.completed .todo-text {
-            text-decoration: line-through;
-            opacity: 0.5;
-        }
-        .todo-checkbox {
-            width: 20px;
-            height: 20px;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-        .todo-text {
-            flex: 1;
-            font-size: 16px;
-        }
-        .user-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .user-email {
-            color: #3ecf8e;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background: #3ecf8e;
-            color: #1a1a2e;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: #fff; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 30px; color: #3ecf8e; }
+        .card { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 25px; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .auth-box { display: none; }
+        .auth-box.active { display: block; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 8px; background: rgba(255,255,255,0.15); color: #fff; font-size: 16px; }
+        input::placeholder { color: rgba(255,255,255,0.5); }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: all 0.3s; margin-bottom: 10px; }
+        .btn-primary { background: #3ecf8e; color: #1a1a2e; font-weight: bold; }
+        .btn-primary:hover { background: #2ecc71; transform: translateY(-2px); }
+        .btn-secondary { background: rgba(255,255,255,0.2); color: #fff; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.3); }
+        .btn-danger { background: #e74c3c; color: #fff; width: auto; padding: 6px 12px; font-size: 14px; }
+        .todo-box { display: none; }
+        .todo-box.active { display: block; }
+        .todo-input { display: flex; gap: 10px; margin-bottom: 20px; }
+        .todo-input input { flex: 1; margin-bottom: 0; }
+        .todo-input button { width: auto; padding: 12px 25px; }
+        .todo-list { list-style: none; }
+        .todo-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 10px; transition: all 0.3s; }
+        .todo-item:hover { background: rgba(255,255,255,0.1); }
+        .todo-item.completed .todo-text { text-decoration: line-through; opacity: 0.5; }
+        .todo-checkbox { width: 20px; height: 20px; margin-right: 15px; cursor: pointer; }
+        .todo-text { flex: 1; font-size: 16px; }
+        .user-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .user-email { color: #3ecf8e; }
+        .empty-state { text-align: center; padding: 40px; color: rgba(255,255,255,0.5); }
+        .badge { display: inline-block; padding: 4px 10px; background: #3ecf8e; color: #1a1a2e; border-radius: 20px; font-size: 12px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>✅ Supabase Todo Demo</h1>
-        
-        <!-- 登录/注册 -->
         <div class="card auth-box active" id="auth-box">
             <div class="badge">🔐 身份认证</div>
             <input type="email" id="email" placeholder="邮箱地址">
             <input type="password" id="password" placeholder="密码">
-            <button class="btn-primary" onclick="signUp()">📝 注册</button>
-            <button class="btn-secondary" onclick="signIn()">🔑 登录</button>
-            <button class="btn-secondary" onclick="signOut()">🚪 退出登录</button>
+            <button type="button" id="btn-signup">📝 注册</button>
+            <button type="button" id="btn-signin">🔑 登录</button>
+            <button type="button" id="btn-signout">🚪 退出登录</button>
         </div>
-        
-        <!-- Todo 列表 -->
         <div class="card todo-box" id="todo-box">
             <div class="user-info">
                 <span>欢迎, <span class="user-email" id="user-email"></span></span>
-                <button class="btn-secondary" style="width: auto; padding: 8px 15px;" onclick="signOut()">退出</button>
+                <button type="button" class="btn-secondary" id="btn-exit" style="width:auto;padding:8px 15px;">退出</button>
             </div>
-            
             <div class="todo-input">
                 <input type="text" id="todo-input" placeholder="添加新任务...">
-                <button class="btn-primary" onclick="addTodo()">➕ 添加</button>
+                <button type="button" class="btn-primary" id="btn-add">➕ 添加</button>
             </div>
-            
             <ul class="todo-list" id="todo-list"></ul>
         </div>
     </div>
 
     <script>
-        // ====== 配置你的 Supabase ======
         const SUPABASE_URL = 'https://crwshvxsbyeciculvysf.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyd3NodnhzYnllY2ljdWx2eXNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4ODg1OTEsImV4cCI6MjA4OTQ2NDU5MX0.lrGhzopZrjOZ08_CuXVYUaxrOloWR4FXkW_fYolrz7w';
-        // =================================
-        
+
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        
+
         // 监听登录状态
-        supabase.auth.onAuthStateChange((event, session) => {
+        supabase.auth.onAuthStateChange(function(event, session) {
             if (session) {
                 showTodoBox(session.user);
                 loadTodos();
@@ -209,129 +77,103 @@
                 showAuthBox();
             }
         });
-        
+
         function showAuthBox() {
             document.getElementById('auth-box').classList.add('active');
             document.getElementById('todo-box').classList.remove('active');
         }
-        
+
         function showTodoBox(user) {
             document.getElementById('auth-box').classList.remove('active');
             document.getElementById('todo-box').classList.add('active');
             document.getElementById('user-email').textContent = user.email;
         }
-        
+
         // 注册
-        async function signUp() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            const { data, error } = await supabase.auth.signUp({ email, password });
-            if (error) {
-                alert('注册失败: ' + error.message);
+        document.getElementById('btn-signup').onclick = async function() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var result = await supabase.auth.signUp({ email: email, password: password });
+            if (result.error) {
+                alert('注册失败: ' + result.error.message);
             } else {
                 alert('注册成功！请检查邮箱验证链接');
             }
-        }
-        
+        };
+
         // 登录
-        async function signIn() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert('登录失败: ' + error.message);
+        document.getElementById('btn-signin').onclick = async function() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var result = await supabase.auth.signInWithPassword({ email: email, password: password });
+            if (result.error) {
+                alert('登录失败: ' + result.error.message);
             }
-        }
-        
+        };
+
         // 退出
-        async function signOut() {
+        document.getElementById('btn-signout').onclick = async function() {
             await supabase.auth.signOut();
             showAuthBox();
-        }
-        
+        };
+
+        document.getElementById('btn-exit').onclick = document.getElementById('btn-signout').onclick;
+
         // 加载 Todo
         async function loadTodos() {
-            const { data: todos, error } = await supabase
-                .from('todos')
-                .select('*')
-                .order('created_at', { ascending: false });
-            
-            if (error) {
-                console.error('加载失败:', error);
+            var result = await supabase.from('todos').select('*').order('created_at', { ascending: false });
+            if (result.error) {
+                console.error('加载失败:', result.error);
                 return;
             }
-            
-            renderTodos(todos);
+            renderTodos(result.data);
         }
-        
+
         // 渲染 Todo
         function renderTodos(todos) {
-            const list = document.getElementById('todo-list');
+            var list = document.getElementById('todo-list');
             list.innerHTML = '';
-            
             if (todos.length === 0) {
-                list.innerHTML = '<div class="empty-state">还没有任务，添加一个吧！</div>';
+                list.innerHTML = '<li class="empty-state">还没有任务，添加一个吧！</li>';
                 return;
             }
-            
-            todos.forEach(todo => {
-                const li = document.createElement('li');
+            todos.forEach(function(todo) {
+                var li = document.createElement('li');
                 li.className = 'todo-item' + (todo.is_completed ? ' completed' : '');
-                li.innerHTML = `
-                    <input type="checkbox" class="todo-checkbox" ${todo.is_completed ? 'checked' : ''} 
-                        onchange="toggleTodo('${todo.id}', ${!todo.is_completed})">
-                    <span class="todo-text">${todo.title}</span>
-                    <button class="btn-danger" onclick="deleteTodo('${todo.id}')">🗑️</button>
-                `;
+                li.innerHTML = '<input type="checkbox" class="todo-checkbox"' + (todo.is_completed ? ' checked' : '') + ' onclick="toggleTodo(\'' + todo.id + '\', ' + (!todo.is_completed) + ')"><span class="todo-text">' + todo.title + '</span><button class="btn-danger" onclick="deleteTodo(\'' + todo.id + '\')">🗑️</button>';
                 list.appendChild(li);
             });
         }
-        
+
         // 添加 Todo
-        async function addTodo() {
-            const input = document.getElementById('todo-input');
-            const title = input.value.trim();
-            
+        document.getElementById('btn-add').onclick = async function() {
+            var input = document.getElementById('todo-input');
+            var title = input.value.trim();
             if (!title) return;
-            
-            const { error } = await supabase
-                .from('todos')
-                .insert([{ title, is_completed: false }]);
-            
-            if (error) {
-                alert('添加失败: ' + error.message);
+            var result = await supabase.from('todos').insert([{ title: title, is_completed: false }]);
+            if (result.error) {
+                alert('添加失败: ' + result.error.message);
                 return;
             }
-            
             input.value = '';
             loadTodos();
-        }
-        
+        };
+
         // 切换完成状态
         async function toggleTodo(id, isCompleted) {
-            await supabase
-                .from('todos')
-                .update({ is_completed: isCompleted })
-                .eq('id', id);
-            
+            await supabase.from('todos').update({ is_completed: isCompleted }).eq('id', id);
             loadTodos();
         }
-        
+
         // 删除 Todo
         async function deleteTodo(id) {
-            await supabase
-                .from('todos')
-                .delete()
-                .eq('id', id);
-            
+            await supabase.from('todos').delete().eq('id', id);
             loadTodos();
         }
-        
+
         // 回车添加
-        document.getElementById('todo-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') addTodo();
+        document.getElementById('todo-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') document.getElementById('btn-add').onclick();
         });
     </script>
 </body>
